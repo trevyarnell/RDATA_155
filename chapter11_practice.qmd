@@ -73,7 +73,8 @@ range(mtcars$disp)
 
 ```{r}
 filtered_cars <- mtcars %>%
-  filter(disp < 160 | disp > 250)
+  filter(disp < 160 | disp > 250) %>%
+  select(1:3)
 
 all(filtered_cars$disp > 250 | filtered_cars$disp < 160)
 ```
