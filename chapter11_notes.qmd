@@ -1,0 +1,161 @@
+---
+title: "Chapter 11 Notes"
+subtitle: "dplyr Sybsetting"
+author: "Trevor Yarnell"
+date: today
+format: html
+editor: visual
+---
+
+# Packages
+
+```{r}
+#| eval: false
+#| include: true
+
+install.packages("dslabs") # Installs dslabs
+install.packages("tidyverse") # Installs tidyverse
+```
+
+```{r}
+#| warning: false
+
+library(dslabs) # Loads dslabs
+library(dplyr) # Loads dplyr
+```
+
+# The Pipe
+
+```{r}
+mtcars %>% # Opens the data and feed it into head()
+head() # Shows first six rows of the dataset
+```
+
+# Selecting Columns
+
+## Positive Selection
+
+```{r}
+select(mtcars, mpg, cyl, hp) # Keep three columns
+```
+
+## Negative Selection
+
+```{r}
+select(mtcars, -gear) # Drop one column
+```
+
+## Piping with Select
+
+```{r}
+mtcars %>%
+  select(mpg, cyl, hp)
+```
+
+## Subset with Select
+
+```{r}
+I_Demo <-  gapminder %>%
+  select(country, year, infant_mortality, continent)
+
+head(I_Demo)
+```
+
+### Step 1
+
+```{r}
+colnames(gapminder)
+```
+
+### Step 2
+
+```{r}
+baby <- gapminder %>%
+  select(country, infant_mortality, fertility)
+
+head(baby)
+```
+
+# Filtering Rows
+
+## Single Condition
+
+```{r}
+filter(mtcars, mpg >= 25)
+```
+
+## Piping with Filter
+
+```{r}
+No_Washington <- murders %>%
+  filter(state != "District of Columbia")
+
+nrow(No_Washington)
+```
+
+## Multiple Conditions with AND
+
+### And , and &
+
+```{r}
+filter(mtcars, mpg >= 25, cyl == 4)
+```
+
+```{r}
+filter(mtcars, mpg >= 25 & cyl == 4)
+```
+
+### With the pipe
+
+```{r}
+efficient <- mtcars %>%
+  filter(mpg >= 25, cyl == 4)
+
+nrow(efficient)
+```
+
+## Multiple Conditions with OR
+
+### Or \| and %in%
+
+```{r}
+filter(mtcars, cyl == 4 | cyl == 6)
+```
+
+```{r}
+filter(mtcars, cyl %in% c(4, 6))
+```
+
+```{r}
+filter(mtcars, cyl == 4 | mpg >= 30)
+```
+
+### With the pipe
+
+```{r}
+efficient_ish <- mtcars %>%
+  filter(mpg >= 25 | cyl == 4)
+
+nrow(efficient_ish)
+```
+
+# filter() AND select()
+
+```{r}
+alaska_disease <- us_contagious_diseases %>%
+  filter(state == "Alaska", year >= 1980) %>%
+  select(year, disease, count)
+
+head(alaska_disease)
+```
+
+# One Application
+
+```{r}
+powerful_auto <- mtcars %>%
+  filter(am == 0, hp > 150) %>%
+  select(hp, mpg)
+
+head(powerful_auto)
+nrow(powerful_auto)
+```
