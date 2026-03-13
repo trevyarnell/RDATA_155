@@ -245,9 +245,10 @@ Maserati Bora  15.0   8  301 335 3.54 3.57 14.6  0  1    5    8</code></pre>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>filtered_cars <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(disp <span class="sc">&lt;</span> <span class="dv">160</span> <span class="sc">|</span> disp <span class="sc">&gt;</span> <span class="dv">250</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(filtered_cars<span class="sc">$</span>disp <span class="sc">&gt;</span> <span class="dv">250</span> <span class="sc">|</span> filtered_cars<span class="sc">$</span>disp <span class="sc">&lt;</span> <span class="dv">160</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(disp <span class="sc">&lt;</span> <span class="dv">160</span> <span class="sc">|</span> disp <span class="sc">&gt;</span> <span class="dv">250</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(filtered_cars<span class="sc">$</span>disp <span class="sc">&gt;</span> <span class="dv">250</span> <span class="sc">|</span> filtered_cars<span class="sc">$</span>disp <span class="sc">&lt;</span> <span class="dv">160</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
