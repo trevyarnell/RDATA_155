@@ -1,0 +1,83 @@
+---
+title: "Chapter 11 Practice"
+author: "Trevor Yarnell"
+date: today
+format: html
+editor: visual
+---
+
+## Task 0
+
+```{r}
+# Load required packages
+
+library(dslabs)
+library(dplyr)
+```
+
+## Task 1
+
+```{r}
+# Creates a new dataframe called C_Overload
+
+C_Overload <- select(temp_carbon, year, carbon_emissions)
+
+head(C_Overload)
+```
+
+Select only kept the year and carbon_emissions columns from the data-set. Head shows the first six rows of the new data frame.
+
+## Task 2
+
+```{r}
+star_names <- stars %>%
+  select(star)
+
+head(star_names)
+```
+
+This chunk of code kept it as a data-frame.
+
+## Task 3
+
+```{r}
+No_Florida <- murders %>%
+  filter(state != "Florida")
+
+head(No_Florida)
+```
+
+```{r}
+unique(No_Florida$state)
+```
+
+By using unique you can check what states are included in the data-set and also ensure you're spelling is correct. When you run unique again I'm looking to see if Florida is still included.
+
+## Task 4
+
+```{r}
+Fast_n_Furious <- mtcars %>%
+  filter(am == 1, cyl == 8, qsec <= 15)
+
+head(Fast_n_Furious)
+nrow(Fast_n_Furious)
+```
+
+I used 1 which indicates that the car is a manual, 8 is the number of cylinders and \<= 15 means R picks out the cars that have a 1/4 times of less than or equal to 15.
+
+## Task 5
+
+```{r}
+range(mtcars$disp)
+```
+
+```{r}
+filtered_cars <- mtcars %>%
+  filter(disp < 160 | disp > 250)
+
+all(filtered_cars$disp > 250 | filtered_cars$disp < 160)
+```
+
+## Task 7
+
+select() allows you to pick out the columns you want and filter() allows you to filter our rows that match a condition you specify. \[\] also perform a similar function to both select() and filter().
