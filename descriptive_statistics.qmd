@@ -1,0 +1,95 @@
+---
+title: "Signature Assignment"
+subtitle: "Descriptive Statistics"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format: html
+execute: 
+  warning: true
+  message: true
+---
+
+# Part 1
+
+## Load Packages and Data
+```{r}
+#| eval: false
+install.packages("palmerpenguins")
+```
+```{r}
+#| message: false
+#| warning: false
+library(dplyr)
+library(palmerpenguins)
+```
+
+The contains information of three penguin species observed in the Palmer Archipelago, Antarctica, collected by Dr. Kristen Gorman with Palmer Station LTER
+
+link: <https://allisonhorst.github.io/palmerpenguins/reference/penguins.html>
+
+[Data Sources Reference](https://allisonhorst.github.io/palmerpenguins/reference/penguins.html)
+
+```{r}
+data("penguins")
+```
+
+## Data Types
+```{r}
+glimpse(penguins)
+```
+The `penguins` dataset contains `{r} nrow(penguins)` and `{r} ncol(penguins)` columns.
+
+The `species` column is stored as `{r} class(penguins$species)` in R. The unique unordered values for `species` are: `{r} unique(penguins$species)`
+
+The `island` column is stored as `{r} class(penguins$island)` in R. The unique unordered values for `island` are: `{r} unique(penguins$island)`
+
+The `bill_length_mm` column is stored as `{r} class(penguins$bill_length_mm)` in R. 
+
+The `bill_depth_mm` column is stored as `{r} class(penguins$bill_depth_mm)` in R. 
+
+The `flipper_length_mm` column is stored as `{r} class(penguins$flipper_length_mm)` in R.
+
+The `body_mass_g` column is stored as `{r} class(penguins$body_mass_g)` in R.
+
+The `sex` column is stored as `{r} class(penguins$sex)` in R. The unique unordered values for `sex` are: `{r} unique(penguins$sex)`
+
+The `year` column is stored as `{r} class(penguins$year)` in R. The unique ordered values for `year` are: `{r} unique(penguins$year)`
+
+# Part 2
+
+## Length
+
+## Count 
+
+## Mode
+
+## Median
+
+## Mean
+
+# Part 3
+
+# Spread
+
+## Standard Deviation
+
+## Range
+
+## IQR
+
+## Five Number Summary
+
+# Part 4
+
+## Describing Data with `dplyr`
+
+
+
+
+
+
+
+
