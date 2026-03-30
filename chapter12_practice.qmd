@@ -1,0 +1,116 @@
+---
+title: "Chapter 12 Practice Space"
+aauthor: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format:
+  html:
+    code-fold: true
+execute:
+  warning: true
+  message: true
+---
+
+# Load Libraries
+```{r}
+library(dplyr)
+library(dslabs)
+```
+
+# Concept Check
+Which method returns a new vector with one result for every position?
+
+b. Logical subsetting using `[ ]`
+
+# Simple `ifelse()`
+```{r}
+?dslabs::heights
+heights <- dslabs::heights
+names(heights)
+```
+
+I am attempting to label the `height` in the `heights` dataset as "Tall" if it is greater than `68` and otherwise "Not Tall"
+
+```{r}
+height_label <- ifelse(
+  test = heights$height > 68,
+  yes = "Tall",
+  no = "Not Tall"
+)
+```
+```{r}
+table(height_label)
+```
+There are `508` "Not Tall" and `542` "Tall".
+
+# Recode with mutate() and case_when()
+
+I am labeling the `mpg` of cars from the `mtcars` dataset as either "High MPG" if it is greater than `25`, "Low MPG" if it is less than `15`, and otherwise "Medium MPG".
+
+```{r}
+mpg_recode <- mtcars %>%
+  mutate(mpg_class = case_when(
+    mpg > 25 ~ "High MPG",
+    mpg < 15 ~ "Low MPG",
+    TRUE ~ "Medium MPG"
+  ))
+```
+```{r}
+table(mpg_recode$mpg_class)
+```
+There are `6` High MPG cars, `5` Low MPG cars, and `21` Medium MPG cars.
+
+# Recode: Name Focus
+```{r}
+?dslabs::stars
+stars <- dslabs::stars
+
+colnames(stars)
+summary(stars$temp)
+```
+
+I am recording the temperature variable in the stars dataset to indicate if the star is "Cool", Warm, or "Hot".
+
+```{r}
+stars_recode <- stars %>%
+  mutate(temp_group = case_when(
+    temp < 4000 ~ "Cool",
+    temp <= 7500 ~ "Warm",
+    TRUE ~ "Hot"
+  ))
+```
+```{r}
+table(stars_recode$temp_group)
+```
+There are `35` Cool stars, `38` Hot stars, and `23` Warm stars.
+
+# Unit conversion with mutate()
+```{r}
+heights <- dslabs::heights
+head(heights)
+```
+
+I am overwriting the height column to a more internationally friendly number.
+
+```{r}
+international_friendly_heights <- heights %>%
+  mutate(height = height * 2.54)
+```
+```{r}
+head(international_friendly_heights)
+```
+The values of the first six rows have been correctly converted to centimeters.
+
+
+
+
+
+
+
+
+
+
+
+
