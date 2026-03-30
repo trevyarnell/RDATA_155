@@ -1,0 +1,136 @@
+---
+title: "Chapter 12 Notes"
+subtitle: "mutate() and case_when()"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format:
+  html:
+    code-fold: true
+execute:
+  warning: true
+  message: true
+---
+
+# Quarto Notes
+
+# Load Packages
+```{r}
+library(dslabs)
+library(dplyr)
+```
+
+# Vectorized Conditionals
+
+## ifelse()
+```{r}
+x <- c(3, 2, 3, 6, 5)
+```
+```{r}
+length(x)
+```
+`x` is a vector with the length of `{r} length(x)` rows.
+```{r}
+ifelse(test = x > 3, yes = "Large", no = "Small")
+```
+```{r}
+length(ifelse(x > 3, "Large", "Small"))
+```
+
+## case_when()
+```{r}
+case_when(c(3, 2, 3, 6, 5) > 3 ~ "Large", .default = "Small")
+```
+
+Don't forget to load any required libraries when trying to use functions no in base R.
+
+## More than Two Categories
+```{r}
+scores <- c(55, 65, 75, 85, 95)
+```
+
+### Nested ifelse()
+```{r}
+ifelse(scores < 60, "Low",
+       ifelse(scores < 80, "Medium", "High"))
+```
+
+### Multiple Rule case_when()
+```{r}
+case_when(scores < 60 ~ "Low",
+          scores < 80 ~ "Medium",
+          TRUE ~ "High")
+```
+```{r}
+case_when(scores < 80 ~ "Medium",
+          scores < 60 ~ "Low",
+          TRUE ~ "High")
+```
+
+# mutate()
+
+## Column Copy
+```{r}
+names(mtcars)
+```
+```{r}
+mtcars2 <- mtcars %>%
+  mutate(new_column_copy = am)
+```
+```{r}
+names(mtcars2)
+```
+
+### mutate() with Arithmetic
+```{r}
+measurements <- data.frame(height_in = c(60, 65, 70))
+measurements
+```
+
+The `measurements` data frame has one column called `{r} colnames(measurements)`.
+
+```{r}
+measurements %>%
+  mutate(height_cm = height_in * 2.54)
+```
+
+### case_when() inside mutate()
+```{r}
+student_scores <- data.frame(scores = c(55, 68, 72, 83, 91))
+```
+```{r}
+student_scores <- student_scores %>%
+  mutate(
+    score_level = case_when(
+      scores < 60 ~ "Low",
+      scores < 80 ~ "Medium",
+      TRUE ~ "High"
+    )
+  )
+```
+```{r}
+head(student_scores)
+```
+
+`student_scores` is a fataframe with columns names: `{r} names (student_scores)`.
+
+## Overwrite Column Values
+```{r}
+unique(mtcars$am)
+```
+```{r}
+cars_overwrite <- mtcars %>%
+  mutate(
+    am = case_when(
+      am == 0 ~ "Automatic",
+      TRUE ~ "Manual"
+    )
+  )
+```
+```{r}
+unique(cars_overwrite$am)
+```
+
+The `am` column in `cars_overwrite` has the unique values: `{r} unique(cars_overwrite$am)`.
