@@ -1,0 +1,162 @@
+---
+title: "Chapter 13 Notes"
+subtitle: "group_by() and summarize()"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format:
+  html:
+    code-fold: false
+---
+
+# Loading Packages
+```{r}
+library(dslabs)
+library(dplyr)
+```
+
+# Counts, Center, and Spread
+Numeric variable: numbers that are measured or calculated
+Categorical variable: stores labels or group names
+
+Count: for a whole dataset means the total number of rows; grouped data mean the number of rows in each group
+
+Center: typical value
+Mean: average
+Median: the middle value
+
+Spread: how much the values vary
+Standard deviation: how far values vary from the mean
+Range: distance from the smallest to largest value
+
+# count()
+## Counting one varible
+```{r}
+mtcars %>%
+  count(cyl)
+```
+Returns how many cars in the `mtcars` dataset have 4, 6, and 8 cylinders grouped by cylinder count.
+
+## count() versus length()
+length() counts how many values are in a vector
+count() counts the rows in a df for each category or combination of categories
+
+## count() with sorting
+```{r}
+mtcars %>%
+  count(cyl, sort = TRUE)
+```
+Sorts the groups with the most vehicles to the least
+
+## count() with multiple variables
+```{r}
+mtcars %>%
+  count(cyl, am)
+```
+
+# summarize()
+```{r}
+mtcars %>%
+  summarize(mean_mpg = mean(mpg))
+```
+Creates a new column that has the mean MPG for all the cars in the mtcars dataset
+
+```{r}
+mtcars %>%
+  summarize(mean_mpg = mean(mpg),
+            max_mpg = max(mpg),
+            count = n())
+```
+## count() versus summarize()
+```{r}
+mtcars %>%
+  group_by(cyl) %>%
+  summarize(n = n())
+```
+
+# group_by()
+```{r}
+cyl_means <- mtcars %>%
+  group_by(cyl) %>%
+  summarize(mean_mpg = mean(mpg))
+```
+
+## `dplyr` default naming
+```{r}
+cyl_means <- mtcars %>%
+  group_by(cyl) %>%
+  summarize(mean(mpg))
+```
+
+# multiple statistics
+```{r}
+cyl_stats <- mtcars %>%
+  group_by(cyl) %>%
+  summarize(mean_mpg = mean(mpg),
+            sd_mpg = sd(mpg),
+            n = n())
+
+cyl_stats
+```
+
+# multiple variables
+```{r}
+mtcars %>%
+  group_by(cyl, am) %>%
+  summarize(avg_mpg = mean(mpg),
+            count = n())
+```
+## ungroup
+```{r}
+cyl_gear_stats <- mtcars %>%
+  group_by(cyl, gear) %>%
+  summarize(mean_mpg = mean(mpg))
+```
+```{r}
+group_vars(cyl_gear_stats)
+```
+```{r}
+is_grouped_df(cyl_gear_stats)
+```
+```{r}
+cyl_gear_stats <- mtcars %>%
+  group_by(cyl, gear) %>%
+  summarize(mean_mpg = mean(mpg), .groups = "drop")
+
+group_vars(cyl_gear_stats)
+```
+```{r}
+is_grouped_df(cyl_gear_stats)
+```
+```{r}
+cyl_gear_stats <- mtcars %>%
+  group_by(cyl, gear) %>%
+  summarize(mean_mpg = mean(mpg)) %>%
+  ungroup()
+```
+```{r}
+group_vars(cyl_gear_stats)
+```
+```{r}
+is_grouped_df(cyl_gear_stats)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
