@@ -1,0 +1,122 @@
+---
+title: "Chapter 13 Practice"
+subtitle: "group_by() and summarize()"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format:
+  html:
+    code-fold: false
+---
+
+# Load Libraries
+```{r}
+library(dslabs)
+library(dplyr)
+```
+
+# Single grouping
+```{r}
+data(stars)
+?stars
+colnames(stars)
+```
+
+I am calculating the `mean_temperature` and `mean_magnitude` from the `stars` dataset and storing it to `twinkle_twinkle`.
+```{r}
+twinkle_twinkle <- stars %>%
+  group_by(type) %>%
+  summarize(
+    mean_temperature = mean(temp),
+    mean_magnitude = mean(magnitude),
+    .groups = "drop"
+  )
+
+twinkle_twinkle
+```
+The mean temperature and mean magnitude for stars in the dataset is 8762.556. The mean magnitude for stars in the dataset is 4.08...
+
+# Single grouping + three stats
+## Inspect the data
+```{r}
+data(olive)
+?olive
+colnames(olive)
+```
+I will be finding the mean, standard deviation of `oleic` fatty acid and counting the number of rows in each region.
+```{r}
+# fatty_acid <- "oleic"
+
+Olive_Garden <- olive %>%
+  group_by(region) %>%
+  summarize(
+    mean_value = mean(oleic),
+    sd_value = sd(oleic),
+    n = n()
+  )
+
+Olive_Garden
+```
+Code chunk does not operate when trying to store the type of fatty acid as a vector. Manually entered instead. Northern Italy has the largest `mean_value` for the fatty acid I selected.
+
+# Counting unique values
+```{r}
+data("us_contagious_diseases")
+?us_contagious_diseases
+
+unique(us_contagious_diseases$disease)
+length(unique(us_contagious_diseases$disease))
+```
+There are `r length(unique(us_contagious_diseases$disease))` unique diseases within the `disease` column of the `us_contagious_diseases` dataset. They are `r unique(us_contagious_diseases$disease)`
+
+## Count the number of states in the dataset
+```{r}
+unique(us_contagious_diseases$state)
+length(unique(us_contagious_diseases$state))
+```
+There are `r length(unique(us_contagious_diseases$state))` unique states within the `state` column of the `us_contagious_diseases` dataset.
+
+# Make and test a prediction
+Using group_by(state, disease) will return 357 groups. Each state will be broken into seven different groups for each disease.
+
+I'm trying to test my theory above by creating a new df that groups the states and diseases.
+```{r}
+categorical_counts <- us_contagious_diseases %>%
+  group_by(state, disease) %>%
+  summarize()
+
+count(categorical_counts)
+```
+My prediction was correct as there are 357 groups.
+
+# National mean counts by disease
+In this task I am calculating the total mean of the `count` for each `disease` and storing that in `Infectious_Burden`
+```{r}
+Infectious_Burden <- us_contagious_diseases %>%
+  group_by(disease) %>%
+  summarize(
+    mean_count = mean(count, na.rm = TRUE),
+    .groups = "drop"
+  ) %>% 
+      arrange(desc(mean_count))
+
+head(Infectious_Burden, 3)
+```
+Mumps and Measles have the highest national mean counts.
+
+# Reflection
+When using `group_by()` before `summarize()` it allows you to get descriptive statistics from different groups within the data. If you were to only use `summarize()` on a data set it would give you the mean, sd, etc for all rows and it would not be broken down by groups. For example earlier in this chapter I wrote code that calculated the. average MPG for all vehicle in the `mtcars` dataset shortly after that I create code that showed the average MPG by number of cylinders.
+
+
+
+
+
+
+
+
+
+
+
+
