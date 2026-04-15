@@ -1,0 +1,89 @@
+---
+title: "Chapter 15 Practice"
+subtitle: "Probability"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format:
+  html:
+    code-fold: false
+---
+# Set Seed
+```{r}
+set.seed(1)
+```
+
+# Task 1
+Goal: Roll a 20 sided die 300 times and store in big_die
+```{r}
+big_die <- sample(1:20, size = 300, replace = TRUE)
+
+any(big_die == 20)
+```
+
+# Task 2
+## Step 1
+Roll at d20 5221 times and store in `boring_weekend`.
+```{r}
+boring_weekend <- sample(1:20, 5221, TRUE)
+```
+
+## Step 2
+Create a table that shows how many times each number was rolled and store it in `d20_counts`.
+```{r}
+d20_counts <- table(boring_weekend)
+
+print(d20_counts)
+```
+
+## Step 3
+Prportion that were 20.
+```{r}
+mean(boring_weekend == 20)
+
+abs(mean(boring_weekend == 20) - 0.05)
+```
+About 5% of the rolls were nat 20s.
+
+## Step 4
+Simulate 100 newborn lengths, mean of 20 and standard deviation of 0.9 store as blanketed_babies.
+```{r}
+blanketed_babies <- rnorm(100, 20, 0.9)
+```
+```{r}
+unique(blanketed_babies)
+```
+
+## Step 5
+Check if any of babies are longer 23 inches and count how many.
+```{r}
+any(blanketed_babies > 23)
+sum(blanketed_babies > 23)
+```
+Based on this simulation the hospital does not need longer blankets.
+
+## Step 6
+Create a vector called `weeks_too_long` that records how mnay babies are longer than 23 inches.
+```{r}
+weeks_two_long <- replicate(1000, sum(rnorm(100, 20, 0.9) > 23))
+```
+```{r}
+table(weeks_two_long)
+mean(weeks_two_long)
+mean(weeks_two_long > 0)
+max(weeks_two_long)
+```
+In a thousand weeks we only see 34 total weeks were babies are over 23 inches.
+
+# Task 3
+In step 6 of this practice section `replicate()` allowed me to repeatedly sample normal distributions. This enable me to run multiple iterations of by normal distribution looking for weeks where a baby is bigger than 23 inches. This is more efficent than manually rerunning the calculation a thousand times.
+
+
+
+
+
+
+
+
