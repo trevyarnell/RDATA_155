@@ -1,0 +1,98 @@
+---
+title: "Wildfire"
+subtitle: "Wildfire Signature Assignment"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format: html
+---
+
+# Load Data
+
+1) Read `whp_raw_sample.csv` using readr, 2) Store in an object called `county_raw`, 3) Run `nrow` and `table` to verify data structure, 4) Explain what is in the data.
+
+```{r}
+library(readr) # Loads readr
+county_raw <- read_csv("whp_raw_sample.csv") # Loads the dataset into an object
+```
+Had to consult AI to help me with this code chunk. Forgot to put the quotation marks around the code.
+
+```{r}
+head(county_raw) # Shows the first six rows of the dataset
+summary(county_raw$whp) # Shows basic statistics of whp
+```
+
+The dataset has four columns `whp`, `county`, `county_fips`, and `cell_area_km2`. It classifies what the wildfire risk is for a given area in a given county.
+
+# Basic Data Audit Summaries
+
+Create a summary of the data using `dplyr` summarize function and stoer that in a new object. Report the number of rows, number of missing values, minimum and maximum value of `cell_area_km2`.
+
+```{r}
+library(dplyr) # Loads dplyr
+county_summary <- county_raw %>%
+  summarise(
+    rows = nrow(county_raw),
+    missing_values = sum(is.na(whp)),
+    min_area = min(cell_area_km2),
+    max_area = max(cell_area_km2)
+  )
+```
+
+```{r}
+county_summary
+```
+
+There are `r nrow(county_raw)` rows in the dataset, `r sum(is.na(county_raw$whp))` missing values,  and the minimum area is `r min(county_raw$cell_area_km2)` and the maximum area is `r max(county_raw$cell_area_km2)`. Each of the rows areas are close to each other.
+
+# Compute WHP quantile edges
+
+Use `quantile()` to compute the quantiles' of the `whp` column of the data abd store in `e`.
+
+```{r}
+e <- quantile(county_raw$whp,
+  probs = c(0, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 1),
+  na.rm = TRUE)
+```
+
+```{r}
+e
+```
+
+The quantiles' show the distribution of the data for example the lowest 25% have a Wildfire Hazard Potential of 130.7305. This categorizes the data so that we can add labels to verbally communicate the risk.
+
+To complete this task I needed to refer to previous notes.
+
+# Add a categorical WHP risk label
+
+I am going to create category labels for the different levels of Wildfire Risk Potential.
+
+```{r}
+county_cats <- county_raw %>%
+  mutate(Category = case_when(
+    is.na(whp) ~ "NA",
+    whp >= 22046.7472 ~ "Ultra (Top 1%)",
+    whp >= 7708.5383 ~ "Very High",
+    whp >= 3479.8125 ~ "High",
+    whp >= 1101.0156 ~ "Moderate",
+    whp >= 397.6562 ~ "Low",
+    whp >= 130.7305 ~ "Very Low"))
+```
+
+```{r}
+head(county_cats)
+
+```
+
+
+
+
+
+
+
+
+
+
+
