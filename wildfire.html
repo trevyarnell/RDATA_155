@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Trevor Yarnell">
-<meta name="dcterms.date" content="2026-04-15">
+<meta name="dcterms.date" content="2026-04-16">
 
 <title>Wildfire</title>
 <style>
@@ -87,6 +87,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-data" id="toc-load-data" class="nav-link active" data-scroll-target="#load-data"><span class="header-section-number">1</span> Load Data</a></li>
   <li><a href="#basic-data-audit-summaries" id="toc-basic-data-audit-summaries" class="nav-link" data-scroll-target="#basic-data-audit-summaries"><span class="header-section-number">2</span> Basic Data Audit Summaries</a></li>
   <li><a href="#compute-whp-quantile-edges" id="toc-compute-whp-quantile-edges" class="nav-link" data-scroll-target="#compute-whp-quantile-edges"><span class="header-section-number">3</span> Compute WHP quantile edges</a></li>
+  <li><a href="#add-a-categorical-whp-risk-label" id="toc-add-a-categorical-whp-risk-label" class="nav-link" data-scroll-target="#add-a-categorical-whp-risk-label"><span class="header-section-number">4</span> Add a categorical WHP risk label</a></li>
+  <li><a href="#aggregate-area-abd-compute-category-probabilities" id="toc-aggregate-area-abd-compute-category-probabilities" class="nav-link" data-scroll-target="#aggregate-area-abd-compute-category-probabilities"><span class="header-section-number">5</span> Aggregate area abd compute category probabilities</a></li>
   </ul>
 </nav>
 </div>
@@ -112,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 15, 2026</p>
+      <p class="date">April 16, 2026</p>
     </div>
   </div>
   
@@ -131,45 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># Loads readr</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>county_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"whp_raw_sample.csv"</span>) <span class="co"># Loads the dataset into an object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 150000 Columns: 4
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (2): county, county_fips
-dbl (2): whp, cell_area_km2
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-</div>
-<p>Had to consult AI to help me with this code chunk. Forgot to put the quotation marks around the code.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(county_raw) <span class="co"># Shows the first six rows of the dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 4
-     whp county   county_fips cell_area_km2
-   &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;               &lt;dbl&gt;
-1 2795.  Idaho    049                0.0576
-2   81.3 Butte    023                0.0576
-3  392.  Boundary 021                0.0576
-4  330.  Lewis    061                0.0576
-5  696   Owyhee   073                0.0576
-6  292.  Shoshone 079                0.0576</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(county_raw<span class="sc">$</span>whp) <span class="co"># Shows basic statistics of whp</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    0.0   130.7   397.7  1602.6  1101.0 63465.4 </code></pre>
-</div>
-</div>
-<p>The dataset has four columns <code>whp</code>, <code>county</code>, <code>county_fips</code>, and <code>cell_area_km2</code>. It classifies what the wildfire risk is for a given area in a given county.</p>
-</section>
-<section id="basic-data-audit-summaries" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Basic Data Audit Summaries</h1>
-<p>Create a summary of the data using <code>dplyr</code> summarize function and stoer that in a new object. Report the number of rows, number of missing values, minimum and maximum value of <code>cell_area_km2</code>.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># Loads dplyr</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -184,35 +148,72 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>county_summary <span class="ot">&lt;-</span> county_raw <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">rows =</span> <span class="fu">nrow</span>(county_raw),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing_values =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(whp)),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_area =</span> <span class="fu">min</span>(cell_area_km2),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_area =</span> <span class="fu">max</span>(cell_area_km2)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>county_raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"whp_raw_sample.csv"</span>) <span class="co"># Loads the dataset into an object</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 150000 Columns: 4</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): county, county_fips
+dbl (2): whp, cell_area_km2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Had to consult AI to help me with this code chunk. Forgot to put the quotation marks around the file name which made it fail to load.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(county_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 150,000
+Columns: 4
+$ whp           &lt;dbl&gt; 2794.51562, 81.32812, 391.60938, 329.70312, 696.00000, 2…
+$ county        &lt;chr&gt; "Idaho", "Butte", "Boundary", "Lewis", "Owyhee", "Shosho…
+$ county_fips   &lt;chr&gt; "049", "023", "021", "061", "073", "079", "037", "073", …
+$ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.057599…</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(county_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 150000</code></pre>
+</div>
+</div>
+<p>The dataset has four columns <code>whp</code>, <code>county</code>, <code>county_fips</code>, and <code>cell_area_km2</code>. It classifies what the wildfire risk is for a given area in a given county.</p>
+</section>
+<section id="basic-data-audit-summaries" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Basic Data Audit Summaries</h1>
+<p>Create a summary of the data using <code>dplyr</code> summarize function and stoer that in a new object. Report the number of rows, number of missing values, minimum and maximum value of <code>cell_area_km2</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>county_summary <span class="ot">&lt;-</span> county_raw <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_rows =</span> <span class="fu">n</span>(),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_na_whp =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(whp)),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_area =</span> <span class="fu">min</span>(cell_area_km2),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_area =</span> <span class="fu">max</span>(cell_area_km2)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>county_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>county_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
-    rows missing_values min_area max_area
-   &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-1 150000              0   0.0576   0.0576</code></pre>
+  n_rows n_na_whp min_area max_area
+   &lt;int&gt;    &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 150000        0   0.0576   0.0576</code></pre>
 </div>
 </div>
 <p>There are 150000 rows in the dataset, 0 missing values, and the minimum area is 0.0575977 and the maximum area is 0.0576027. Each of the rows areas are close to each other.</p>
 </section>
 <section id="compute-whp-quantile-edges" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Compute WHP quantile edges</h1>
-<p>Use <code>quantile()</code> to compute the quantiles’ of the <code>whp</code> column of the data abd store in <code>e</code>.</p>
+<p>Use <code>quantile()</code> to compute the quantiles’ of the <code>whp</code> column of the data and store in <code>e</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">quantile</span>(county_raw<span class="sc">$</span>whp,</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="dv">1</span>),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">quantile</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  county_raw<span class="sc">$</span>whp,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">probs =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="dv">1</span>),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>e</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>e</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        0%        25%        50%        75%        90%        95%        99% 
     0.0000   130.7305   397.6562  1101.0156  3479.8125  7708.5383 22046.7472 
@@ -220,6 +221,80 @@ Attaching package: 'dplyr'</code></pre>
 63465.4219 </code></pre>
 </div>
 </div>
+<p>The quantiles’ show the distribution of the data for example the lowest 25% have a Wildfire Hazard Potential of 130.7305. This categorizes the data so that we can add labels to verbally communicate the risk.</p>
+<p>To complete this task I needed to refer to previous notes.</p>
+</section>
+<section id="add-a-categorical-whp-risk-label" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Add a categorical WHP risk label</h1>
+<p>Create a new data frame called <code>county_cats</code> by using <code>mutate()</code> and <code>case_when()</code> that categorizes the risk based on the percentile from Very Low to Ultra.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>county_cats <span class="ot">&lt;-</span> county_raw <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Category =</span> <span class="fu">case_when</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">1</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">2</span>] <span class="sc">~</span> <span class="st">"Very Low"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">2</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">3</span>] <span class="sc">~</span> <span class="st">"Low"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">3</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">4</span>] <span class="sc">~</span> <span class="st">"Moderate"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">4</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">5</span>] <span class="sc">~</span> <span class="st">"High"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">5</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">6</span>] <span class="sc">~</span> <span class="st">"Very High"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">6</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">7</span>] <span class="sc">~</span> <span class="st">"Extreme"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">7</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">8</span>] <span class="sc">~</span> <span class="st">"Ultra (Top 1%)"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"NA"</span>),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Category =</span> <span class="fu">factor</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>      Category,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Very Low"</span>, <span class="st">"Low"</span>, <span class="st">"Moderate"</span>, <span class="st">"High"</span>, <span class="st">"Very High"</span>, <span class="st">"Extreme"</span>, <span class="st">"Ultra (Top 1%)"</span>),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">ordered =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>county_cats <span class="sc">%&gt;%</span> <span class="fu">count</span>(Category)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 2
+  Category           n
+  &lt;ord&gt;          &lt;int&gt;
+1 Very Low       37500
+2 Low            37497
+3 Moderate       37502
+4 High           22501
+5 Very High       7500
+6 Extreme         6000
+7 Ultra (Top 1%)  1499
+8 &lt;NA&gt;               1</code></pre>
+</div>
+</div>
+<p>When using <code>case_when()</code> it compares the WHP value from the table and the one I’ve specified through edges. If the WHP values falls between the values I have set with the logical tests it specifies that column based on the categories I gave it.</p>
+</section>
+<section id="aggregate-area-abd-compute-category-probabilities" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Aggregate area abd compute category probabilities</h1>
+<p>In this final task I am determining the aggregate fire risk by category using <code>group_by()</code>, <code>summarize()</code>, and <code>mutate()</code> and then calculating probability as a share of area. The result is then stored in <code>prob_tbl</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>prob_tbl <span class="ot">&lt;-</span> county_cats <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Category) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">area_km2 =</span> <span class="fu">sum</span>(cell_area_km2),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_cells =</span> <span class="fu">n</span>(),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Probability =</span> area_km2<span class="sc">/</span><span class="fu">sum</span>(area_km2)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">"Category"</span>, <span class="st">"Probability"</span>, <span class="st">"area_km2"</span>, <span class="st">"n_cells"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>prob_tbl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+  Category       Probability  area_km2 n_cells
+  &lt;ord&gt;                &lt;dbl&gt;     &lt;dbl&gt;   &lt;int&gt;
+1 Very Low        0.250      2160.       37500
+2 Low             0.250      2160.       37497
+3 Moderate        0.250      2160.       37502
+4 High            0.150      1296.       22501
+5 Very High       0.0500      432.        7500
+6 Extreme         0.0400      346.        6000
+7 Ultra (Top 1%)  0.00999      86.3       1499
+8 &lt;NA&gt;            0.00000667    0.0576       1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(prob_tbl<span class="sc">$</span>Probability)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. In addition the category that is at the highest risk also has the largest amount of area associated with it.</p>
 </section>
 
 </main>
