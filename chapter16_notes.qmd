@@ -1,0 +1,160 @@
+---
+title: "Chapter 16 Notes"
+subtitle: "ggplot"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format: 
+  html:
+    code-fold: false
+---
+
+# Loading Packages
+```{r}
+#| eval: false
+#| include: false
+install.packages("ggplot2") # Installs ggplot
+```
+```{r}
+#| include: false
+library(dslabs) # Loads dslabs
+library(dplyr) # Loads dplyr
+library(ggplot2) # Loads ggplot2
+```
+
+# What is ggplot2?
+```{r}
+#| eval: false
+#| include: false
+?ggplot
+```
+`ggplot` allows me to create plots using a data frame. Common patterns are `ggplot(data = df, mapping = aes(x, y, other aesthetics))` or `ggplot(data = df)` or `ggplot`. The first one is useful if all layers of the plot use the same data and aesthetics. The second pattern does not define aesthetics upfront, useful if using multiple datasets. The third one is used when creating complicated graphics. `data =` and `mapping =` are not needed however can be added for clarity.
+
+# The Blank Canvas
+First I am creating a blank canvas by piping `divorce_margarine` into `ggplot`.
+```{r}
+data("divorce_margarine")
+divorce_margarine
+```
+Original code misspelled "divorce" and would give a warning that the data couldn't be found.
+```{r}
+divorce_margarine %>%
+  ggplot() 
+```
+Creates a blank plot since no arguements where included.
+
+# Mapping Aesthetics
+Aesthetics are the visual properties of your graph and are done throught `aes` arguement.
+
+Mapping divorce rate to margarine consumption
+```{r}
+divorce_margarine %>%
+  ggplot(aes(x = divorce_rate_maine, y = margarine_consumption_per_capita))
+```
+The plot is blank because we haven't added any geometric objects to the plot yet. The `aes()` step needs to come first before we add geoms'.
+
+# Scatterplots
+geoms are the shapes that are drawn on the plot, points, lines, bars, boxes, boxplots, etc.
+```{r}
+?geom_point
+```
+Typical Syntax: `geom_point(mapping = NULL, data = NULL, ..., na.rm = FALSE, show.legend = NA, inherit.aes = TRUE)`
+
+Add points using `geom_point`
+```{r}
+divorce_margarine %>%
+  ggplot(aes(divorce_rate_maine, margarine_consumption_per_capita)) +
+  geom_point()
+```
+```{r}
+divorce_margarine %>%
+  ggplot(aes(divorce_rate_maine, margarine_consumption_per_capita)) +
+  geom_point(aes(color = year))
+```
+Creates a blue gradiant corresponding to the year of the data point. By using `aes()` in `geom_point` I am defining the specfic aesthetics assigned to that layer of the plot.
+
+```{r}
+divorce_margarine %>%
+  ggplot(aes(divorce_rate_maine, margarine_consumption_per_capita)) +
+  geom_point(aes(color = year, size = margarine_consumption_per_capita))
+```
+```{r}
+divorce_margarine %>%
+  ggplot(aes(divorce_rate_maine, margarine_consumption_per_capita)) +
+  geom_point(aes(color = year)) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+# Histograms
+```{r}
+set.seed(2025)
+Tallness <- data.frame(
+  Country = c(rep("USA", 1000), rep("CAN", 1000)),
+  Height = c(rnorm(1000, 67, 2.5), rnorm(1000, 66, 1.5))
+)
+```
+```{r}
+nrow(Tallness)
+Tallness %>%
+  group_by(Country) %>%
+  summarize(n = n(),
+             mean_height = mean(Height),
+             sd_height = sd(Height),
+             .groups = "drop")
+```
+Build a histogram
+```{r}
+Tallness %>%
+  ggplot(aes(Height)) +
+  geom_histogram()
+```
+```{r}
+Tallness %>%
+  ggplot(aes(Height)) +
+  geom_histogram(fill = "steelblue",
+                 color = "white",
+                 binwidth = .25)
+```
+## Density Plot
+Create a density plot and fill the area under the curve and add transparency.
+```{r}
+Tallness %>%
+  ggplot(aes(Height)) +
+  geom_density(fill = "purple",
+               alpha = 0.4,
+               color = "purple",
+               linewidth = 1)
+```
+## Overlaid Histograms
+```{r}
+tall_compared_fig <- Tallness %>%
+  ggplot(aes(Height, fill = Country)) +
+  geom_histogram(position = "identity",
+                 alpha = 0.6)
+
+print(tall_compared_fig)
+```
+
+# Boxplots
+```{r}
+Tall_Box <- Tallness %>%
+  ggplot(aes(Country, Height, fill = Country)) +
+  geom_boxplot(show.legend = FALSE)
+
+Tall_Box
+```
+
+# Labels and Themes
+```{r}
+Tall_Box <- Tallness %>%
+  ggplot(aes(Country, Height, fill = Country)) +
+  geom_boxplot(show.legend = FALSE) +
+  xlab("North American Country") +
+  ylab("Height (inches)") +
+  ggtitle("Boxplot of Men's Heights in NA")
+  theme_light()
+
+Tall_Box
+```

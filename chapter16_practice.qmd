@@ -1,0 +1,122 @@
+---
+title: "Chapter 16 Practice"
+subtitle: "ggplot"
+author: "Trevor Yarnell"
+date: today
+toc: true
+toc-depth: 2
+number-sections: true
+format: 
+  html:
+    code-fold: false
+---
+
+# Load Packages
+```{r}
+library(ggplot2)
+library(dplyr)
+library(dslabs)
+```
+
+# Steps in when using `ggplot2`.
+1) The first step is to pipe in the data that you are planning on using to make your chart.
+
+2) Use the `aes` function to assign x and y and add any aesthetics you would like applied globally to your chart.
+
+3) use `geom_*` to specifiy what kind of chart you would like to create using `ggplot2`.
+
+# Scatterplot
+Create a scatterplot using data built into R called `iris`. Put sepal length on the x-axis and petal length on the y-axis. Color the points by species and made them moderately large. Lastly, label the x and y-axis.
+```{r}
+data("iris") # Load the dataset
+```
+```{r}
+Pretty_Flowers <- iris %>%
+  ggplot(aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point(size = 3) +
+  xlab("Sepal Length (cm)") +
+  ylab("Petal Length (cm)")
+```
+```{r}
+class(Pretty_Flowers) # Not sure why we included this function?
+Pretty_Flowers
+```
+It appears that as Sepal Length increases for both Versicolor and Viginica that Petal Length also increases. This same trend cannot be seen with the Setosa.
+
+# Boxplot: Group Comparison
+Create a boxplot using the `iris` dataset and store it as an object called `Petal_Spread`. Species on the x-axis and petal width on the y-axis. Fill each box with a different color by species but remove the legend.
+```{r}
+Petal_Spread <- iris %>%
+  ggplot(aes(Species, Petal.Width, fill = Species)) +
+  geom_boxplot(show.legend = FALSE)
+```
+Needed to correct the above code chunk and change `color` to `fill`.
+```{r}
+class(Petal_Spread)
+Petal_Spread
+```
+# Density plot: split + transparency
+Create a density plot using the `CO2` dataset and store it as `CO2_graph. CO2 uptake should be on x-axis. Plant type to define smooth curves so that each plant as it's own colored curve however make it transparent. Add a title.
+```{r}
+data("CO2") # Load Dataset
+?CO2
+```
+```{r}
+unique(CO2$Plant)
+```
+```{r}
+CO2_Graph <- CO2 %>%
+  ggplot(aes(uptake, fill = Type)) +
+  geom_density(alpha = 0.5) +
+  ggtitle("CO2 Uptake by Plant Type")
+CO2_Graph
+```
+The overlap suggests that some of the plants from Quebec and Mississippi took up similar amount of CO2 however Quebec plants appeared to uptake more CO2 than Mississippi plants.
+
+# Histogram vs. Density
+Create a graph from the `heights` dataset and save as Tall_Density. Height should be on the x-axis. Create a histogram that are 1 inch wide and filled with blue and have white boarders. Scale the histogram so it shows density and not raw counts, on top add a density curve that shows the overall shape of the distribution using a Dark Orange line and fill under the curve with the same color and add transparency. Label the x-axis "Height (Inches)" andn y-axis "Density".
+```{r}
+data("heights") # Load the Data
+?heights # Inspect the Data
+head(heights)
+```
+```{r}
+Tall_Density <- heights %>%
+  ggplot(aes(x = height)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 binwidth = 1,
+                 fill = "blue",
+                 color = "white") +
+  geom_density(color = "darkorange",
+               fill = "darkorange",
+               alpha = 0.3,
+               linewidth = 1) +
+  xlab("Height (Inches)") +
+  ylab("Density")
+```
+Instead of on line 86 using `y =` I used `position`. This produced an error and I had to consult AI. I used boisestate.ai and the Intro to R tutor for help. It helped me understand that when I am trying to replace the y-axis with density instead of count I use `y =`.
+```{r}
+class(Tall_Density)
+Tall_Density
+```
+Had to correct on line 86 that `y = after_stat` requires `aes()` to function properly. Consulted AI for assiatnce.
+```{r}
+head(heights)
+nrow(heights)
+```
+The density curve shows that the distribution of the data is unimodal with a mean roughly in the high sixties. The added density curve makes it easier to see the distribution.
+
+# When is Density Curve Helpful when compared to a Histogram
+A Density curve is helpful with continuous data that doesn't really have fixed categories. This is a lot of different types of data such has height where there can be almost infinate amount of variations and therefore when using histogram you have to bin heights with other similar heights. Histograms are helpful with data that only has a few categories.
+
+
+
+
+
+
+
+
+
+
+
+
