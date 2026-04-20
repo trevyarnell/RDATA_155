@@ -158,7 +158,7 @@ summary(High_Lognorm)
 length(High_Lognorm)
 ```
 ```{r}
-fast_growing_count <- sum(High_Lognorm)
+fast_growing_count <- sum(High_Lognorm >= 10)
 ```
 
 ## Count fast-growing ignitions

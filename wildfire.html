@@ -89,10 +89,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#compute-whp-quantile-edges" id="toc-compute-whp-quantile-edges" class="nav-link" data-scroll-target="#compute-whp-quantile-edges"><span class="header-section-number">3</span> Compute WHP quantile edges</a></li>
   <li><a href="#add-a-categorical-whp-risk-label" id="toc-add-a-categorical-whp-risk-label" class="nav-link" data-scroll-target="#add-a-categorical-whp-risk-label"><span class="header-section-number">4</span> Add a categorical WHP risk label</a></li>
   <li><a href="#aggregate-area-abd-compute-category-probabilities" id="toc-aggregate-area-abd-compute-category-probabilities" class="nav-link" data-scroll-target="#aggregate-area-abd-compute-category-probabilities"><span class="header-section-number">5</span> Aggregate area abd compute category probabilities</a></li>
-  <li><a href="#task-1" id="toc-task-1" class="nav-link" data-scroll-target="#task-1"><span class="header-section-number">6</span> Task 1</a></li>
-  <li><a href="#task-2" id="toc-task-2" class="nav-link" data-scroll-target="#task-2"><span class="header-section-number">7</span> Task 2</a></li>
-  <li><a href="#task-3" id="toc-task-3" class="nav-link" data-scroll-target="#task-3"><span class="header-section-number">8</span> Task 3</a></li>
-  <li><a href="#task-4" id="toc-task-4" class="nav-link" data-scroll-target="#task-4"><span class="header-section-number">9</span> Task 4</a>
+  <li><a href="#tail-probability-with-plnorm" id="toc-tail-probability-with-plnorm" class="nav-link" data-scroll-target="#tail-probability-with-plnorm"><span class="header-section-number">6</span> Tail probability with <code>plnorm()</code></a></li>
+  <li><a href="#th-percentile-run-probability" id="toc-th-percentile-run-probability" class="nav-link" data-scroll-target="#th-percentile-run-probability"><span class="header-section-number">7</span> 95th Percentile Run Probability</a></li>
+  <li><a href="#calculating-density-using-dlnorm" id="toc-calculating-density-using-dlnorm" class="nav-link" data-scroll-target="#calculating-density-using-dlnorm"><span class="header-section-number">8</span> Calculating Density using <code>dlnorm()</code></a></li>
+  <li><a href="#simulate" id="toc-simulate" class="nav-link" data-scroll-target="#simulate"><span class="header-section-number">9</span> Simulate</a>
   <ul class="collapse">
   <li><a href="#simulate-high-hazard-distances" id="toc-simulate-high-hazard-distances" class="nav-link" data-scroll-target="#simulate-high-hazard-distances"><span class="header-section-number">9.1</span> Simulate High-hazard distances</a></li>
   <li><a href="#count-fast-growing-ignitions" id="toc-count-fast-growing-ignitions" class="nav-link" data-scroll-target="#count-fast-growing-ignitions"><span class="header-section-number">9.2</span> Count fast-growing ignitions</a></li>
@@ -305,8 +305,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 <p>This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. It also shows that most of the area in Idaho is at Very Low to High risk with very little Very High and above.</p>
 </section>
-<section id="task-1" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Task 1</h1>
+<section id="tail-probability-with-plnorm" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Tail probability with <code>plnorm()</code></h1>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_high_exact <span class="ot">&lt;-</span> <span class="fu">plnorm</span>(<span class="at">q =</span> <span class="dv">10</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -317,8 +317,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="task-2" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Task 2</h1>
+<section id="th-percentile-run-probability" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 95th Percentile Run Probability</h1>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>q95_high <span class="ot">&lt;-</span> <span class="fu">qlnorm</span>(<span class="fl">0.95</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -329,8 +329,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="task-3" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Task 3</h1>
+<section id="calculating-density-using-dlnorm" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Calculating Density using <code>dlnorm()</code></h1>
 <p>Use <code>dlnorm()</code> compute the density at 3km and 10km using the mean and SD from the High fire row on Table 1 and store in d_3 and d_10.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>d_3 <span class="ot">&lt;-</span> <span class="fu">dlnorm</span>(<span class="dv">3</span>, <span class="at">meanlog =</span> <span class="fu">log</span>(<span class="dv">7</span>), <span class="at">sdlog =</span> <span class="fu">log</span>(<span class="dv">2</span>))</span>
@@ -347,8 +347,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="task-4" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Task 4</h1>
+<section id="simulate" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Simulate</h1>
 <section id="simulate-high-hazard-distances" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="simulate-high-hazard-distances"><span class="header-section-number">9.1</span> Simulate High-hazard distances</h2>
 <div class="cell">
@@ -367,7 +367,7 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(High_Lognorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(High_Lognorm <span class="sc">&gt;=</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="count-fast-growing-ignitions" class="level2" data-number="9.2">
@@ -375,11 +375,11 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3144.195</code></pre>
+<pre><code>[1] 30</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count<span class="sc">/</span><span class="fu">length</span>(High_Lognorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6.9871</code></pre>
+<pre><code>[1] 0.06666667</code></pre>
 </div>
 </div>
 </section>
