@@ -102,7 +102,7 @@ prob_tbl <- county_cats %>%
             .groups = "drop") %>%
   mutate(
     Probability = area_km2/sum(area_km2)) %>%
-      select(Category, Probability, area_km2, n_cells) # What is this actually doing? It's ordering how the columns in the table                                                              appear.
+      select(Category, Probability, area_km2, n_cells) # What is this actually doing? It's ordering how the                                                                columns in the table appear.
 ```
 ```{r}
 prob_tbl
@@ -110,12 +110,70 @@ sum(prob_tbl$Probability)
 ```
 This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. It also shows that most of the area in Idaho is at Very Low to High risk with very little Very High and above.
 
+# Tail probability with `plnorm()`
 
+```{r}
+p_high_exact <- plnorm(q = 10, meanlog = 1.907, sdlog = 0.280, lower.tail = FALSE)
+```
 
+```{r}
+p_high_exact
+```
 
+# 95th Percentile Run Probability
 
+```{r}
+q95_high <- qlnorm(0.95, meanlog = 1.907, sdlog = 0.280)
+```
 
+```{r}
+q95_high
+```
 
+# Calculating Density using `dlnorm()`
 
+Use `dlnorm()` compute the density at 3km and 10km using the mean and SD from the High fire row on Table 1 and store in d_3 and d_10.
 
+```{r}
+d_3 <- dlnorm(3, meanlog = log(7), sdlog = log(2))
+d_10 <- dlnorm(10, meanlog = log(7), sdlog = log(2))
+```
+
+```{r}
+d_3
+d_10
+```
+
+# Simulate
+
+## Simulate High-hazard distances
+
+```{r}
+set.seed(2025)
+High_Lognorm <- rlnorm(n = 450, meanlog = 1.907, sdlog = 0.280)
+```
+
+```{r}
+summary(High_Lognorm)
+length(High_Lognorm)
+```
+```{r}
+fast_growing_count <- sum(High_Lognorm)
+```
+
+## Count fast-growing ignitions
+
+```{r}
+fast_growing_count
+fast_growing_count/length(High_Lognorm)
+```
+
+## Visualize simulated distances
+
+```{r}
+hist(High_Lognorm,
+     col = "Red",
+     main = "Simulated 8-Hour Distances for High WHP (Log Normal Model)",
+     xlab = "Distance")
+```
 

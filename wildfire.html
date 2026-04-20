@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Trevor Yarnell">
-<meta name="dcterms.date" content="2026-04-16">
+<meta name="dcterms.date" content="2026-04-20">
 
 <title>Wildfire</title>
 <style>
@@ -89,6 +89,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#compute-whp-quantile-edges" id="toc-compute-whp-quantile-edges" class="nav-link" data-scroll-target="#compute-whp-quantile-edges"><span class="header-section-number">3</span> Compute WHP quantile edges</a></li>
   <li><a href="#add-a-categorical-whp-risk-label" id="toc-add-a-categorical-whp-risk-label" class="nav-link" data-scroll-target="#add-a-categorical-whp-risk-label"><span class="header-section-number">4</span> Add a categorical WHP risk label</a></li>
   <li><a href="#aggregate-area-abd-compute-category-probabilities" id="toc-aggregate-area-abd-compute-category-probabilities" class="nav-link" data-scroll-target="#aggregate-area-abd-compute-category-probabilities"><span class="header-section-number">5</span> Aggregate area abd compute category probabilities</a></li>
+  <li><a href="#task-1" id="toc-task-1" class="nav-link" data-scroll-target="#task-1"><span class="header-section-number">6</span> Task 1</a></li>
+  <li><a href="#task-2" id="toc-task-2" class="nav-link" data-scroll-target="#task-2"><span class="header-section-number">7</span> Task 2</a></li>
+  <li><a href="#task-3" id="toc-task-3" class="nav-link" data-scroll-target="#task-3"><span class="header-section-number">8</span> Task 3</a></li>
+  <li><a href="#task-4" id="toc-task-4" class="nav-link" data-scroll-target="#task-4"><span class="header-section-number">9</span> Task 4</a>
+  <ul class="collapse">
+  <li><a href="#simulate-high-hazard-distances" id="toc-simulate-high-hazard-distances" class="nav-link" data-scroll-target="#simulate-high-hazard-distances"><span class="header-section-number">9.1</span> Simulate High-hazard distances</a></li>
+  <li><a href="#count-fast-growing-ignitions" id="toc-count-fast-growing-ignitions" class="nav-link" data-scroll-target="#count-fast-growing-ignitions"><span class="header-section-number">9.2</span> Count fast-growing ignitions</a></li>
+  <li><a href="#visualize-simulated-distances" id="toc-visualize-simulated-distances" class="nav-link" data-scroll-target="#visualize-simulated-distances"><span class="header-section-number">9.3</span> Visualize simulated distances</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -114,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 16, 2026</p>
+      <p class="date">April 20, 2026</p>
     </div>
   </div>
   
@@ -272,7 +281,7 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Probability =</span> area_km2<span class="sc">/</span><span class="fu">sum</span>(area_km2)) <span class="sc">%&gt;%</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(<span class="fu">c</span>(<span class="st">"Category"</span>, <span class="st">"Probability"</span>, <span class="st">"area_km2"</span>, <span class="st">"n_cells"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(Category, Probability, area_km2, n_cells) <span class="co"># What is this actually doing? It's ordering how the                                                                columns in the table appear.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>prob_tbl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -294,7 +303,102 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
-<p>This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. In addition the category that is at the highest risk also has the largest amount of area associated with it.</p>
+<p>This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. It also shows that most of the area in Idaho is at Very Low to High risk with very little Very High and above.</p>
+</section>
+<section id="task-1" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Task 1</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_high_exact <span class="ot">&lt;-</span> <span class="fu">plnorm</span>(<span class="at">q =</span> <span class="dv">10</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p_high_exact</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0788567</code></pre>
+</div>
+</div>
+</section>
+<section id="task-2" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Task 2</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>q95_high <span class="ot">&lt;-</span> <span class="fu">qlnorm</span>(<span class="fl">0.95</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>q95_high</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10.67131</code></pre>
+</div>
+</div>
+</section>
+<section id="task-3" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Task 3</h1>
+<p>Use <code>dlnorm()</code> compute the density at 3km and 10km using the mean and SD from the High fire row on Table 1 and store in d_3 and d_10.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>d_3 <span class="ot">&lt;-</span> <span class="fu">dlnorm</span>(<span class="dv">3</span>, <span class="at">meanlog =</span> <span class="fu">log</span>(<span class="dv">7</span>), <span class="at">sdlog =</span> <span class="fu">log</span>(<span class="dv">2</span>))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>d_10 <span class="ot">&lt;-</span> <span class="fu">dlnorm</span>(<span class="dv">10</span>, <span class="at">meanlog =</span> <span class="fu">log</span>(<span class="dv">7</span>), <span class="at">sdlog =</span> <span class="fu">log</span>(<span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>d_3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.09088507</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>d_10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.05041818</code></pre>
+</div>
+</div>
+</section>
+<section id="task-4" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Task 4</h1>
+<section id="simulate-high-hazard-distances" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="simulate-high-hazard-distances"><span class="header-section-number">9.1</span> Simulate High-hazard distances</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>High_Lognorm <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(<span class="at">n =</span> <span class="dv">450</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(High_Lognorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  3.032   5.550   6.739   6.987   8.052  14.966 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(High_Lognorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 450</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(High_Lognorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="count-fast-growing-ignitions" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="count-fast-growing-ignitions"><span class="header-section-number">9.2</span> Count fast-growing ignitions</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3144.195</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count<span class="sc">/</span><span class="fu">length</span>(High_Lognorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.9871</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-simulated-distances" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="visualize-simulated-distances"><span class="header-section-number">9.3</span> Visualize simulated distances</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(High_Lognorm,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"Red"</span>,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Simulated 8-Hour Distances for High WHP (Log Normal Model)"</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Distance"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="wildfire_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 
 </main>
