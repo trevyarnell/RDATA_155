@@ -2,15 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Trevor Yarnell">
-<meta name="dcterms.date" content="2026-04-20">
+<meta name="dcterms.date" content="2026-04-23">
 
 <title>Wildfire</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -63,15 +66,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="wildfire_files/libs/clipboard/clipboard.min.js"></script>
 <script src="wildfire_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="wildfire_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="wildfire_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="wildfire_files/libs/quarto-html/popper.min.js"></script>
 <script src="wildfire_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="wildfire_files/libs/quarto-html/anchor.min.js"></script>
 <link href="wildfire_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="wildfire_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="wildfire_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="wildfire_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="wildfire_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="wildfire_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="wildfire_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -84,19 +86,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#load-data" id="toc-load-data" class="nav-link active" data-scroll-target="#load-data"><span class="header-section-number">1</span> Load Data</a></li>
-  <li><a href="#basic-data-audit-summaries" id="toc-basic-data-audit-summaries" class="nav-link" data-scroll-target="#basic-data-audit-summaries"><span class="header-section-number">2</span> Basic Data Audit Summaries</a></li>
-  <li><a href="#compute-whp-quantile-edges" id="toc-compute-whp-quantile-edges" class="nav-link" data-scroll-target="#compute-whp-quantile-edges"><span class="header-section-number">3</span> Compute WHP quantile edges</a></li>
-  <li><a href="#add-a-categorical-whp-risk-label" id="toc-add-a-categorical-whp-risk-label" class="nav-link" data-scroll-target="#add-a-categorical-whp-risk-label"><span class="header-section-number">4</span> Add a categorical WHP risk label</a></li>
-  <li><a href="#aggregate-area-abd-compute-category-probabilities" id="toc-aggregate-area-abd-compute-category-probabilities" class="nav-link" data-scroll-target="#aggregate-area-abd-compute-category-probabilities"><span class="header-section-number">5</span> Aggregate area abd compute category probabilities</a></li>
-  <li><a href="#tail-probability-with-plnorm" id="toc-tail-probability-with-plnorm" class="nav-link" data-scroll-target="#tail-probability-with-plnorm"><span class="header-section-number">6</span> Tail probability with <code>plnorm()</code></a></li>
-  <li><a href="#th-percentile-run-probability" id="toc-th-percentile-run-probability" class="nav-link" data-scroll-target="#th-percentile-run-probability"><span class="header-section-number">7</span> 95th Percentile Run Probability</a></li>
-  <li><a href="#calculating-density-using-dlnorm" id="toc-calculating-density-using-dlnorm" class="nav-link" data-scroll-target="#calculating-density-using-dlnorm"><span class="header-section-number">8</span> Calculating Density using <code>dlnorm()</code></a></li>
-  <li><a href="#simulate" id="toc-simulate" class="nav-link" data-scroll-target="#simulate"><span class="header-section-number">9</span> Simulate</a>
+  <li><a href="#part-a" id="toc-part-a" class="nav-link active" data-scroll-target="#part-a"><span class="header-section-number">1</span> Part A</a>
   <ul class="collapse">
-  <li><a href="#simulate-high-hazard-distances" id="toc-simulate-high-hazard-distances" class="nav-link" data-scroll-target="#simulate-high-hazard-distances"><span class="header-section-number">9.1</span> Simulate High-hazard distances</a></li>
-  <li><a href="#count-fast-growing-ignitions" id="toc-count-fast-growing-ignitions" class="nav-link" data-scroll-target="#count-fast-growing-ignitions"><span class="header-section-number">9.2</span> Count fast-growing ignitions</a></li>
-  <li><a href="#visualize-simulated-distances" id="toc-visualize-simulated-distances" class="nav-link" data-scroll-target="#visualize-simulated-distances"><span class="header-section-number">9.3</span> Visualize simulated distances</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data"><span class="header-section-number">1.1</span> Load Data</a></li>
+  <li><a href="#basic-data-audit-summaries" id="toc-basic-data-audit-summaries" class="nav-link" data-scroll-target="#basic-data-audit-summaries"><span class="header-section-number">1.2</span> Basic Data Audit Summaries</a></li>
+  <li><a href="#compute-whp-quantile-edges" id="toc-compute-whp-quantile-edges" class="nav-link" data-scroll-target="#compute-whp-quantile-edges"><span class="header-section-number">1.3</span> Compute WHP quantile edges</a></li>
+  <li><a href="#add-a-categorical-whp-risk-label" id="toc-add-a-categorical-whp-risk-label" class="nav-link" data-scroll-target="#add-a-categorical-whp-risk-label"><span class="header-section-number">1.4</span> Add a categorical WHP risk label</a></li>
+  <li><a href="#aggregate-area-abd-compute-category-probabilities" id="toc-aggregate-area-abd-compute-category-probabilities" class="nav-link" data-scroll-target="#aggregate-area-abd-compute-category-probabilities"><span class="header-section-number">1.5</span> Aggregate area abd compute category probabilities</a></li>
+  </ul></li>
+  <li><a href="#part-b" id="toc-part-b" class="nav-link" data-scroll-target="#part-b"><span class="header-section-number">2</span> Part B</a>
+  <ul class="collapse">
+  <li><a href="#tail-probability-with-plnorm" id="toc-tail-probability-with-plnorm" class="nav-link" data-scroll-target="#tail-probability-with-plnorm"><span class="header-section-number">2.1</span> Tail probability with <code>plnorm()</code></a></li>
+  <li><a href="#th-percentile-run-probability" id="toc-th-percentile-run-probability" class="nav-link" data-scroll-target="#th-percentile-run-probability"><span class="header-section-number">2.2</span> 95th Percentile Run Probability</a></li>
+  <li><a href="#calculating-density-using-dlnorm" id="toc-calculating-density-using-dlnorm" class="nav-link" data-scroll-target="#calculating-density-using-dlnorm"><span class="header-section-number">2.3</span> Calculating Density using <code>dlnorm()</code></a></li>
+  <li><a href="#simulate-high-hazard-distances" id="toc-simulate-high-hazard-distances" class="nav-link" data-scroll-target="#simulate-high-hazard-distances"><span class="header-section-number">2.4</span> Simulate High-hazard distances</a></li>
+  <li><a href="#count-fast-growing-ignitions" id="toc-count-fast-growing-ignitions" class="nav-link" data-scroll-target="#count-fast-growing-ignitions"><span class="header-section-number">2.5</span> Count fast-growing ignitions</a></li>
+  <li><a href="#visualize-simulated-distances" id="toc-visualize-simulated-distances" class="nav-link" data-scroll-target="#visualize-simulated-distances"><span class="header-section-number">2.6</span> Visualize simulated distances</a></li>
+  </ul></li>
+  <li><a href="#part-c" id="toc-part-c" class="nav-link" data-scroll-target="#part-c"><span class="header-section-number">3</span> Part C</a>
+  <ul class="collapse">
+  <li><a href="#create-category-labels" id="toc-create-category-labels" class="nav-link" data-scroll-target="#create-category-labels"><span class="header-section-number">3.1</span> Create category labels</a></li>
+  <li><a href="#create-category-probabilities" id="toc-create-category-probabilities" class="nav-link" data-scroll-target="#create-category-probabilities"><span class="header-section-number">3.2</span> Create category probabilities</a></li>
+  <li><a href="#create-lognormal-parameter-vectors" id="toc-create-lognormal-parameter-vectors" class="nav-link" data-scroll-target="#create-lognormal-parameter-vectors"><span class="header-section-number">3.3</span> Create lognormal parameter vectors</a></li>
+  <li><a href="#set-global-simulation-constants" id="toc-set-global-simulation-constants" class="nav-link" data-scroll-target="#set-global-simulation-constants"><span class="header-section-number">3.4</span> Set global simulation constants</a></li>
+  <li><a href="#sample-categories-for-one-season" id="toc-sample-categories-for-one-season" class="nav-link" data-scroll-target="#sample-categories-for-one-season"><span class="header-section-number">3.5</span> Sample categories for one season</a></li>
+  <li><a href="#draw-distances-for-one-season" id="toc-draw-distances-for-one-season" class="nav-link" data-scroll-target="#draw-distances-for-one-season"><span class="header-section-number">3.6</span> Draw distances for one season</a></li>
+  <li><a href="#count-fast-runs-for-one-season" id="toc-count-fast-runs-for-one-season" class="nav-link" data-scroll-target="#count-fast-runs-for-one-season"><span class="header-section-number">3.7</span> Count fast runs for one season</a></li>
+  <li><a href="#bundle-one-season-logic-in-a-single-block" id="toc-bundle-one-season-logic-in-a-single-block" class="nav-link" data-scroll-target="#bundle-one-season-logic-in-a-single-block"><span class="header-section-number">3.8</span> Bundle one-season logic in a single block</a></li>
+  <li><a href="#use-replicate-to-simulate-many-seasons" id="toc-use-replicate-to-simulate-many-seasons" class="nav-link" data-scroll-target="#use-replicate-to-simulate-many-seasons"><span class="header-section-number">3.9</span> Use <code>replicate()</code> to simulate many seasons</a></li>
+  <li><a href="#visualize-the-distribution-of-seasonal-fast-counts" id="toc-visualize-the-distribution-of-seasonal-fast-counts" class="nav-link" data-scroll-target="#visualize-the-distribution-of-seasonal-fast-counts"><span class="header-section-number">3.10</span> Visualize the distribution of seasonal fast counts</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -123,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 20, 2026</p>
+      <p class="date">April 23, 2026</p>
     </div>
   </div>
   
@@ -135,8 +153,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="load-data" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Load Data</h1>
+<section id="part-a" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Part A</h1>
+<section id="load-data" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="load-data"><span class="header-section-number">1.1</span> Load Data</h2>
 <ol type="1">
 <li>Read <code>whp_raw_sample.csv</code> using readr, 2) Store in an object called <code>county_raw</code>, 3) Run <code>nrow</code> and <code>table</code> to verify data structure, 4) Explain what is in the data.</li>
 </ol>
@@ -189,8 +209,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 <p>The dataset has four columns <code>whp</code>, <code>county</code>, <code>county_fips</code>, and <code>cell_area_km2</code>. It classifies what the wildfire risk is for a given area in a given county.</p>
 </section>
-<section id="basic-data-audit-summaries" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Basic Data Audit Summaries</h1>
+<section id="basic-data-audit-summaries" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="basic-data-audit-summaries"><span class="header-section-number">1.2</span> Basic Data Audit Summaries</h2>
 <p>Create a summary of the data using <code>dplyr</code> summarize function and stoer that in a new object. Report the number of rows, number of missing values, minimum and maximum value of <code>cell_area_km2</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>county_summary <span class="ot">&lt;-</span> county_raw <span class="sc">%&gt;%</span></span>
@@ -212,8 +232,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 <p>There are 150000 rows in the dataset, 0 missing values, and the minimum area is 0.0575977 and the maximum area is 0.0576027. Each of the rows areas are close to each other.</p>
 </section>
-<section id="compute-whp-quantile-edges" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Compute WHP quantile edges</h1>
+<section id="compute-whp-quantile-edges" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="compute-whp-quantile-edges"><span class="header-section-number">1.3</span> Compute WHP quantile edges</h2>
 <p>Use <code>quantile()</code> to compute the quantiles’ of the <code>whp</code> column of the data and store in <code>e</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">quantile</span>(</span>
@@ -233,8 +253,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <p>The quantiles’ show the distribution of the data for example the lowest 25% have a Wildfire Hazard Potential of 130.7305. This categorizes the data so that we can add labels to verbally communicate the risk.</p>
 <p>To complete this task I needed to refer to previous notes.</p>
 </section>
-<section id="add-a-categorical-whp-risk-label" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Add a categorical WHP risk label</h1>
+<section id="add-a-categorical-whp-risk-label" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="add-a-categorical-whp-risk-label"><span class="header-section-number">1.4</span> Add a categorical WHP risk label</h2>
 <p>Create a new data frame called <code>county_cats</code> by using <code>mutate()</code> and <code>case_when()</code> that categorizes the risk based on the percentile from Very Low to Ultra.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>county_cats <span class="ot">&lt;-</span> county_raw <span class="sc">%&gt;%</span></span>
@@ -245,7 +265,7 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">4</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">5</span>] <span class="sc">~</span> <span class="st">"High"</span>,</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">5</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">6</span>] <span class="sc">~</span> <span class="st">"Very High"</span>,</span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">6</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">7</span>] <span class="sc">~</span> <span class="st">"Extreme"</span>,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">7</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;</span> e[<span class="dv">8</span>] <span class="sc">~</span> <span class="st">"Ultra (Top 1%)"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    whp <span class="sc">&gt;=</span> e[<span class="dv">7</span>] <span class="sc">&amp;</span> whp <span class="sc">&lt;=</span> e[<span class="dv">8</span>] <span class="sc">~</span> <span class="st">"Ultra (Top 1%)"</span>,</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"NA"</span>),</span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Category =</span> <span class="fu">factor</span>(</span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>      Category,</span>
@@ -255,7 +275,7 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>county_cats <span class="sc">%&gt;%</span> <span class="fu">count</span>(Category)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 2
+<pre><code># A tibble: 7 × 2
   Category           n
   &lt;ord&gt;          &lt;int&gt;
 1 Very Low       37500
@@ -264,14 +284,13 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 4 High           22501
 5 Very High       7500
 6 Extreme         6000
-7 Ultra (Top 1%)  1499
-8 &lt;NA&gt;               1</code></pre>
+7 Ultra (Top 1%)  1500</code></pre>
 </div>
 </div>
 <p>When using <code>case_when()</code> it compares the WHP value from the table and the one I’ve specified through edges. If the WHP values falls between the values I have set with the logical tests it specifies that column based on the categories I gave it.</p>
 </section>
-<section id="aggregate-area-abd-compute-category-probabilities" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Aggregate area abd compute category probabilities</h1>
+<section id="aggregate-area-abd-compute-category-probabilities" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="aggregate-area-abd-compute-category-probabilities"><span class="header-section-number">1.5</span> Aggregate area abd compute category probabilities</h2>
 <p>In this final task I am determining the aggregate fire risk by category using <code>group_by()</code>, <code>summarize()</code>, and <code>mutate()</code> and then calculating probability as a share of area. The result is then stored in <code>prob_tbl</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>prob_tbl <span class="ot">&lt;-</span> county_cats <span class="sc">%&gt;%</span></span>
@@ -286,17 +305,16 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>prob_tbl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 4
-  Category       Probability  area_km2 n_cells
-  &lt;ord&gt;                &lt;dbl&gt;     &lt;dbl&gt;   &lt;int&gt;
-1 Very Low        0.250      2160.       37500
-2 Low             0.250      2160.       37497
-3 Moderate        0.250      2160.       37502
-4 High            0.150      1296.       22501
-5 Very High       0.0500      432.        7500
-6 Extreme         0.0400      346.        6000
-7 Ultra (Top 1%)  0.00999      86.3       1499
-8 &lt;NA&gt;            0.00000667    0.0576       1</code></pre>
+<pre><code># A tibble: 7 × 4
+  Category       Probability area_km2 n_cells
+  &lt;ord&gt;                &lt;dbl&gt;    &lt;dbl&gt;   &lt;int&gt;
+1 Very Low            0.250    2160.    37500
+2 Low                 0.250    2160.    37497
+3 Moderate            0.250    2160.    37502
+4 High                0.150    1296.    22501
+5 Very High           0.0500    432.     7500
+6 Extreme             0.0400    346.     6000
+7 Ultra (Top 1%)      0.0100     86.4    1500</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(prob_tbl<span class="sc">$</span>Probability)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -305,8 +323,11 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 <p>This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. It also shows that most of the area in Idaho is at Very Low to High risk with very little Very High and above.</p>
 </section>
-<section id="tail-probability-with-plnorm" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Tail probability with <code>plnorm()</code></h1>
+</section>
+<section id="part-b" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Part B</h1>
+<section id="tail-probability-with-plnorm" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="tail-probability-with-plnorm"><span class="header-section-number">2.1</span> Tail probability with <code>plnorm()</code></h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_high_exact <span class="ot">&lt;-</span> <span class="fu">plnorm</span>(<span class="at">q =</span> <span class="dv">10</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -317,8 +338,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="th-percentile-run-probability" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> 95th Percentile Run Probability</h1>
+<section id="th-percentile-run-probability" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="th-percentile-run-probability"><span class="header-section-number">2.2</span> 95th Percentile Run Probability</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>q95_high <span class="ot">&lt;-</span> <span class="fu">qlnorm</span>(<span class="fl">0.95</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -329,8 +350,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="calculating-density-using-dlnorm" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Calculating Density using <code>dlnorm()</code></h1>
+<section id="calculating-density-using-dlnorm" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="calculating-density-using-dlnorm"><span class="header-section-number">2.3</span> Calculating Density using <code>dlnorm()</code></h2>
 <p>Use <code>dlnorm()</code> compute the density at 3km and 10km using the mean and SD from the High fire row on Table 1 and store in d_3 and d_10.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>d_3 <span class="ot">&lt;-</span> <span class="fu">dlnorm</span>(<span class="dv">3</span>, <span class="at">meanlog =</span> <span class="fu">log</span>(<span class="dv">7</span>), <span class="at">sdlog =</span> <span class="fu">log</span>(<span class="dv">2</span>))</span>
@@ -347,10 +368,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="simulate" class="level1" data-number="9">
-<h1 data-number="9"><span class="header-section-number">9</span> Simulate</h1>
-<section id="simulate-high-hazard-distances" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="simulate-high-hazard-distances"><span class="header-section-number">9.1</span> Simulate High-hazard distances</h2>
+<section id="simulate-high-hazard-distances" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="simulate-high-hazard-distances"><span class="header-section-number">2.4</span> Simulate High-hazard distances</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>High_Lognorm <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(<span class="at">n =</span> <span class="dv">450</span>, <span class="at">meanlog =</span> <span class="fl">1.907</span>, <span class="at">sdlog =</span> <span class="fl">0.280</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -370,8 +389,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(High_Lognorm <span class="sc">&gt;=</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="count-fast-growing-ignitions" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="count-fast-growing-ignitions"><span class="header-section-number">9.2</span> Count fast-growing ignitions</h2>
+<section id="count-fast-growing-ignitions" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="count-fast-growing-ignitions"><span class="header-section-number">2.5</span> Count fast-growing ignitions</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fast_growing_count</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -383,8 +402,8 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </section>
-<section id="visualize-simulated-distances" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="visualize-simulated-distances"><span class="header-section-number">9.3</span> Visualize simulated distances</h2>
+<section id="visualize-simulated-distances" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="visualize-simulated-distances"><span class="header-section-number">2.6</span> Visualize simulated distances</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(High_Lognorm,</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">"Red"</span>,</span>
@@ -398,6 +417,244 @@ $ cell_area_km2 &lt;dbl&gt; 0.05759997, 0.05759958, 0.05760004, 0.05759985, 0.05
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="part-c" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Part C</h1>
+<p>Research Question: In a season with 450 new ignitions statewide, what is the probability we see at least 50 fast-growing events (&gt;= 10 km in 8 hours) when ignitions can occur in any hazard category according to their statewide area weights?</p>
+<section id="create-category-labels" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="create-category-labels"><span class="header-section-number">3.1</span> Create category labels</h2>
+<p>Goal: Create a vector named <code>labels</code> from <strong>Table 1</strong> using <code>c()</code> and verify the labels.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Very Low"</span>, <span class="st">"Low"</span>, <span class="st">"Moderate"</span>, <span class="st">"High"</span>, <span class="st">"Very High"</span>, <span class="st">"Extreme"</span>, <span class="st">"Ultra (Top 1%)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>labels</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Very Low"       "Low"            "Moderate"       "High"          
+[5] "Very High"      "Extreme"        "Ultra (Top 1%)"</code></pre>
+</div>
+</div>
+<p>Comment: I don’t know why matching the text from the table will be helpful later, but I will soon.</p>
+</section>
+<section id="create-category-probabilities" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="create-category-probabilities"><span class="header-section-number">3.2</span> Create category probabilities</h2>
+<p>Goal: Store the probabilities from <strong>Table 1</strong> in a vector called <code>prob</code> and verify the probabilities round to one.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fu">c</span>(.<span class="dv">25</span>, .<span class="dv">25</span>, .<span class="dv">25</span>, .<span class="dv">15</span>, .<span class="dv">05</span>, .<span class="dv">04</span>, .<span class="dv">01</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>prob</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.25 0.25 0.25 0.15 0.05 0.04 0.01</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(prob)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="create-lognormal-parameter-vectors" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="create-lognormal-parameter-vectors"><span class="header-section-number">3.3</span> Create lognormal parameter vectors</h2>
+<p>Goal: Store the Mean log value in a vector called <code>meanlog</code> and store the SD log values in a vector called <code>sdlog</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>meanlog <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.582</span>, <span class="fl">1.046</span>, <span class="fl">1.451</span>, <span class="fl">1.907</span>, <span class="fl">2.455</span>, <span class="fl">2.866</span>, <span class="fl">3.310</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>sdlog <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.472</span>, <span class="fl">0.325</span>, <span class="fl">0.325</span>, <span class="fl">0.280</span>, <span class="fl">0.246</span>, <span class="fl">0.220</span>, <span class="fl">0.212</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>meanlog</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.582 1.046 1.451 1.907 2.455 2.866 3.310</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>sdlog</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.472 0.325 0.325 0.280 0.246 0.220 0.212</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(meanlog) <span class="sc">==</span> <span class="fu">length</span>(sdlog)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Had to get some AI assistance with the <code>length(meanlog) == length(sdlog)</code>. Previously I only included one = sign and this gave me no output.</p>
+<p>I see that as the mean goes up the sd goes down.</p>
+</section>
+<section id="set-global-simulation-constants" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="set-global-simulation-constants"><span class="header-section-number">3.4</span> Set global simulation constants</h2>
+<p>Goal: Set the constants provided from the research question in their respective vectors.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">450</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>N</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 450</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>S</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1e+05</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>k</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+</section>
+<section id="sample-categories-for-one-season" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sample-categories-for-one-season"><span class="header-section-number">3.5</span> Sample categories for one season</h2>
+<p>Goal: Simulate one season of ignitions by using <code>sample()</code> with replacement and probability from <code>prob</code> and store in idx.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">sample.int</span>(<span class="fu">length</span>(labels),</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> N,</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>              prob</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(idx)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 2 1 4 2 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(labels[idx])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+       Extreme           High            Low       Moderate Ultra (Top 1%) 
+            27             53            112            119              8 
+     Very High       Very Low 
+            18            113 </code></pre>
+</div>
+</div>
+<p>Comment: The lower the fire risk the more ignitions we see.</p>
+</section>
+<section id="draw-distances-for-one-season" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="draw-distances-for-one-season"><span class="header-section-number">3.6</span> Draw distances for one season</h2>
+<p>Goal: Use <code>rlnorm</code> to simulate the 8-hour distance</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(N, <span class="at">meanlog =</span> meanlog[idx], <span class="at">sdlog =</span> sdlog[idx])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.562349 3.414131 1.675214 5.948361 2.150998 2.346982</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.4517  2.2351  3.4845  5.2892  5.7747 41.3441 </code></pre>
+</div>
+</div>
+<p>Comment: The number of ignitions is much larger than the rest of the categories.</p>
+</section>
+<section id="count-fast-runs-for-one-season" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="count-fast-runs-for-one-season"><span class="header-section-number">3.7</span> Count fast runs for one season</h2>
+<p>Goal: Create a vector that marks which ignitions are fast-growing using <code>d &gt;= k</code>. Then calculate the sum and compute the mean to get a fraction of fast ignitions.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>fast_flags_one <span class="ot">&lt;-</span> d <span class="sc">&gt;=</span> k</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>fast_count_one <span class="ot">&lt;-</span> <span class="fu">sum</span>(fast_flags_one)</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(fast_flags_one)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1133333</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>fast_count_one</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 51</code></pre>
+</div>
+</div>
+<p>Comment: In this particular simulation I saw 56 fast runs.</p>
+</section>
+<section id="bundle-one-season-logic-in-a-single-block" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="bundle-one-season-logic-in-a-single-block"><span class="header-section-number">3.8</span> Bundle one-season logic in a single block</h2>
+<p>Goal: Bundle the code done in the previous task so that it just returns the total number of fast runs.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>fast_count_one <span class="ot">&lt;-</span> {</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">length</span>(labels),</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> N,</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">prob =</span> prob)</span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(N, <span class="at">meanlog =</span> meanlog[idx],</span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">sdlog =</span> sdlog[idx])</span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(d <span class="sc">&gt;=</span> k)</span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>fast_count_one</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 42</code></pre>
+</div>
+</div>
+<p>Comment: We can replicate this block many times to get different seasons.</p>
+</section>
+<section id="use-replicate-to-simulate-many-seasons" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="use-replicate-to-simulate-many-seasons"><span class="header-section-number">3.9</span> Use <code>replicate()</code> to simulate many seasons</h2>
+<p>Goal: Using <code>replicate()</code> simulate 5 seasons worth of fires</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>counts_fast_mix <span class="ot">&lt;-</span> <span class="fu">replicate</span>(</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  S,</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  fast_count_one <span class="ot">&lt;-</span> {</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>  idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">length</span>(labels),</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> N,</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">prob =</span> prob)</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(N, <span class="at">meanlog =</span> meanlog[idx],</span>
+<span id="cb87-10"><a href="#cb87-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">sdlog =</span> sdlog[idx])</span>
+<span id="cb87-11"><a href="#cb87-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(d <span class="sc">&gt;=</span> k)</span>
+<span id="cb87-12"><a href="#cb87-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb87-13"><a href="#cb87-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(counts_fast_mix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  21.00   40.00   45.00   44.71   49.00   76.00 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(counts_fast_mix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 44.70867</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>prob_at_least_50 <span class="ot">&lt;-</span> <span class="fu">mean</span>(counts_fast_mix <span class="sc">&gt;=</span> <span class="dv">50</span>)</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>prob_at_least_50 <span class="sc">*</span> <span class="dv">100</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 22.363</code></pre>
+</div>
+</div>
+<p>Comment: The average number of fast run fires was about 45, the probability of a fast run was 22.563%.</p>
+</section>
+<section id="visualize-the-distribution-of-seasonal-fast-counts" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="visualize-the-distribution-of-seasonal-fast-counts"><span class="header-section-number">3.10</span> Visualize the distribution of seasonal fast counts</h2>
+<p>Goal: Create a histogram of <code>counts_fast_mix</code> and label the axes. Draw a line at the 50 mark.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># Load ggplot2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>fast_count_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">fast_count =</span> counts_fast_mix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>fast_count_hist <span class="ot">&lt;-</span> fast_count_df <span class="sc">%&gt;%</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> fast_count)) <span class="sc">+</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="dv">1</span>,</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">"blue"</span>,</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">50</span>,</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Number of Fast Ignitions"</span>) <span class="sc">+</span></span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Density"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>fast_count_hist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="wildfire_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Comment: It supports that about only 22% of fires would be fast ignitions with the majority of seasons only having about 44 fast ignitions.</p>
 </section>
 </section>
 

@@ -9,7 +9,9 @@ number-sections: true
 format: html
 ---
 
-# Load Data
+# Part A
+
+## Load Data
 
 1) Read `whp_raw_sample.csv` using readr, 2) Store in an object called `county_raw`, 3) Run `nrow` and `table` to verify data structure, 4) Explain what is in the data.
 
@@ -26,7 +28,7 @@ nrow(county_raw)
 ```
 The dataset has four columns `whp`, `county`, `county_fips`, and `cell_area_km2`. It classifies what the wildfire risk is for a given area in a given county.
 
-# Basic Data Audit Summaries
+## Basic Data Audit Summaries
 
 Create a summary of the data using `dplyr` summarize function and stoer that in a new object. Report the number of rows, number of missing values, minimum and maximum value of `cell_area_km2`.
 
@@ -46,7 +48,7 @@ county_summary
 
 There are `r nrow(county_raw)` rows in the dataset, `r sum(is.na(county_raw$whp))` missing values,  and the minimum area is `r min(county_raw$cell_area_km2)` and the maximum area is `r max(county_raw$cell_area_km2)`. Each of the rows areas are close to each other.
 
-# Compute WHP quantile edges
+## Compute WHP quantile edges
 
 Use `quantile()` to compute the quantiles' of the `whp` column of the data and store in `e`.
 
@@ -65,7 +67,7 @@ The quantiles' show the distribution of the data for example the lowest 25% have
 
 To complete this task I needed to refer to previous notes.
 
-# Add a categorical WHP risk label
+## Add a categorical WHP risk label
 
 Create a new data frame called `county_cats` by using `mutate()` and `case_when()` that categorizes the risk based on the percentile from Very Low to Ultra.
 
@@ -78,7 +80,7 @@ county_cats <- county_raw %>%
     whp >= e[4] & whp < e[5] ~ "High",
     whp >= e[5] & whp < e[6] ~ "Very High",
     whp >= e[6] & whp < e[7] ~ "Extreme",
-    whp >= e[7] & whp < e[8] ~ "Ultra (Top 1%)",
+    whp >= e[7] & whp <= e[8] ~ "Ultra (Top 1%)",
     TRUE ~ "NA"),
     Category = factor(
       Category,
@@ -90,7 +92,7 @@ county_cats %>% count(Category)
 ```
 When using `case_when()` it compares the WHP value from the table and the one I've specified through edges. If the WHP values falls between the values I have set with the logical tests it specifies that column based on the categories I gave it.
 
-# Aggregate area abd compute category probabilities
+## Aggregate area abd compute category probabilities
 
 In this final task I am determining the aggregate fire risk by category using `group_by()`, `summarize()`, and `mutate()` and then calculating probability as a share of area. The result is then stored in `prob_tbl`.
 
@@ -110,7 +112,9 @@ sum(prob_tbl$Probability)
 ```
 This probabilty tables show that as the risk Category goes up so does the probability of a random ignition. It also shows that most of the area in Idaho is at Very Low to High risk with very little Very High and above.
 
-# Tail probability with `plnorm()`
+# Part B
+
+## Tail probability with `plnorm()`
 
 ```{r}
 p_high_exact <- plnorm(q = 10, meanlog = 1.907, sdlog = 0.280, lower.tail = FALSE)
@@ -120,7 +124,7 @@ p_high_exact <- plnorm(q = 10, meanlog = 1.907, sdlog = 0.280, lower.tail = FALS
 p_high_exact
 ```
 
-# 95th Percentile Run Probability
+## 95th Percentile Run Probability
 
 ```{r}
 q95_high <- qlnorm(0.95, meanlog = 1.907, sdlog = 0.280)
@@ -130,7 +134,7 @@ q95_high <- qlnorm(0.95, meanlog = 1.907, sdlog = 0.280)
 q95_high
 ```
 
-# Calculating Density using `dlnorm()`
+## Calculating Density using `dlnorm()`
 
 Use `dlnorm()` compute the density at 3km and 10km using the mean and SD from the High fire row on Table 1 and store in d_3 and d_10.
 
@@ -143,8 +147,6 @@ d_10 <- dlnorm(10, meanlog = log(7), sdlog = log(2))
 d_3
 d_10
 ```
-
-# Simulate
 
 ## Simulate High-hazard distances
 
@@ -176,4 +178,211 @@ hist(High_Lognorm,
      main = "Simulated 8-Hour Distances for High WHP (Log Normal Model)",
      xlab = "Distance")
 ```
+
+# Part C
+
+Research Question: In a season with 450 new ignitions statewide, what is the probability we see at least 50 fast-growing events (>= 10 km in 8 hours) when ignitions can occur in any hazard category according to their statewide area weights?
+
+## Create category labels
+
+Goal: Create a vector named `labels` from **Table 1** using `c()` and verify the labels.
+
+```{r}
+labels <- c("Very Low", "Low", "Moderate", "High", "Very High", "Extreme", "Ultra (Top 1%)")
+```
+
+```{r}
+labels
+```
+
+Comment: I don't know why matching the text from the table will be helpful later, but I will soon.
+
+## Create category probabilities
+
+Goal: Store the probabilities from **Table 1** in a vector called `prob` and verify the probabilities round to one.
+
+```{r}
+prob <- c(.25, .25, .25, .15, .05, .04, .01)
+```
+
+```{r}
+prob
+sum(prob)
+```
+
+## Create lognormal parameter vectors
+
+Goal: Store the Mean log value in a vector called `meanlog` and store the SD log values in a vector called `sdlog`.
+
+```{r}
+meanlog <- c(0.582, 1.046, 1.451, 1.907, 2.455, 2.866, 3.310)
+sdlog <- c(0.472, 0.325, 0.325, 0.280, 0.246, 0.220, 0.212)
+```
+
+```{r}
+meanlog
+sdlog
+length(meanlog) == length(sdlog)
+```
+
+Had to get some AI assistance with the `length(meanlog) == length(sdlog)`. Previously I only included one = sign and this gave me no output.
+
+I see that as the mean goes up the sd goes down.
+
+## Set global simulation constants
+
+Goal: Set the constants provided from the research question in their respective vectors.
+
+```{r}
+N <- 450
+S <- 100000
+k <- 10
+```
+
+```{r}
+N
+S
+k
+```
+
+## Sample categories for one season
+
+Goal: Simulate one season of ignitions by using `sample()` with replacement and probability from `prob` and store in idx.
+
+```{r}
+idx <- sample.int(length(labels),
+              size = N,
+              replace = TRUE,
+              prob
+)
+```
+
+```{r}
+head(idx)
+table(labels[idx])
+```
+
+Comment: The lower the fire risk the more ignitions we see.
+
+## Draw distances for one season
+
+Goal: Use `rlnorm` to simulate the 8-hour distance
+
+```{r}
+d <- rlnorm(N, meanlog = meanlog[idx], sdlog = sdlog[idx])
+```
+
+```{r}
+head(d)
+summary(d)
+```
+
+Comment: The number of ignitions is much larger than the rest of the categories.
+
+## Count fast runs for one season
+
+Goal: Create a vector that marks which ignitions are fast-growing using `d >= k`. Then calculate the sum and compute the mean to get a fraction of fast ignitions.
+
+```{r}
+fast_flags_one <- d >= k
+fast_count_one <- sum(fast_flags_one)
+mean(fast_flags_one)
+```
+
+```{r}
+fast_count_one
+```
+
+Comment: In this particular simulation I saw 56 fast runs.
+
+## Bundle one-season logic in a single block
+
+Goal: Bundle the code done in the previous task so that it just returns the total number of fast runs.
+
+```{r}
+fast_count_one <- {
+  idx <- sample(length(labels),
+                size = N,
+                replace = TRUE,
+                prob = prob)
+  d <- rlnorm(N, meanlog = meanlog[idx],
+              sdlog = sdlog[idx])
+  sum(d >= k)
+}
+```
+
+```{r}
+fast_count_one
+```
+
+Comment: We can replicate this block many times to get different seasons.
+
+## Use `replicate()` to simulate many seasons
+
+Goal: Using `replicate()` simulate 5 seasons worth of fires
+
+```{r}
+set.seed(2025)
+counts_fast_mix <- replicate(
+  S,
+  fast_count_one <- {
+  idx <- sample(length(labels),
+                size = N,
+                replace = TRUE,
+                prob = prob)
+  d <- rlnorm(N, meanlog = meanlog[idx],
+              sdlog = sdlog[idx])
+  sum(d >= k)
+}
+)
+```
+
+```{r}
+summary(counts_fast_mix)
+mean(counts_fast_mix)
+prob_at_least_50 <- mean(counts_fast_mix >= 50)
+prob_at_least_50 * 100
+```
+
+Comment: The average number of fast run fires was about 45, the probability of a fast run was 22.563%.
+
+## Visualize the distribution of seasonal fast counts
+
+Goal: Create a histogram of `counts_fast_mix` and label the axes. Draw a line at the 50 mark.
+
+```{r}
+library(ggplot2) # Load ggplot2
+```
+
+```{r}
+fast_count_df <- data.frame(fast_count = counts_fast_mix)
+```
+
+```{r}
+fast_count_hist <- fast_count_df %>%
+  ggplot(aes(x = fast_count)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 binwidth = 1,
+                 fill = "blue",
+                 color = "white") +
+  geom_vline(xintercept = 50,
+             color = "red") +
+  xlab("Number of Fast Ignitions") +
+  ylab("Density")
+```
+
+```{r}
+fast_count_hist
+```
+
+Comment: It supports that about only 22% of fires would be fast ignitions with the majority of seasons only having about 44 fast ignitions.
+
+
+
+
+
+
+
+
+
 
